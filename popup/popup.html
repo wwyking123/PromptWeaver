@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prompt Optimizer 设置</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body>
+  <!-- ── 顶部标题栏 ── -->
+  <header class="header">
+    <div class="header-logo">🪄</div>
+    <div class="header-info">
+      <span class="header-title">Prompt Optimizer</span>
+      <span class="header-subtitle">提示词一键优化</span>
+    </div>
+  </header>
+
+  <!-- ── 主体内容 ── -->
+  <main class="main">
+    <!-- 模型选择 -->
+    <div class="form-group">
+      <label class="form-label" for="provider">
+        <span class="label-icon">🤖</span> 模型提供商
+      </label>
+      <div class="select-wrapper">
+        <select id="provider" class="form-select">
+          <option value="openai">OpenAI (GPT-4o mini)</option>
+          <option value="gemini">Google Gemini 1.5 Flash</option>
+          <option value="claude">Anthropic Claude 3 Haiku</option>
+          <option value="deepseek">DeepSeek Chat</option>
+          <option value="qwen">通义千问 Plus</option>
+          <option value="kimi">Kimi (moonshot-v1-8k)</option>
+        </select>
+        <span class="select-arrow">▾</span>
+      </div>
+    </div>
+
+    <!-- API Key -->
+    <div class="form-group">
+      <label class="form-label" for="apiKey">
+        <span class="label-icon">🔑</span> API 密钥
+      </label>
+      <div class="input-wrapper">
+        <input type="password" id="apiKey" class="form-input" placeholder="请输入 API Key..." autocomplete="off"
+          spellcheck="false" />
+        <button class="toggle-visibility" id="toggleKey" title="显示/隐藏密钥" type="button">
+          <span id="eyeIcon">👁</span>
+        </button>
+      </div>
+      <p id="keyHint" class="form-hint"></p>
+    </div>
+
+    <!-- 高级设置（可折叠） -->
+    <div class="advanced-section">
+      <button class="advanced-toggle" id="advancedToggle" type="button">
+        <span class="advanced-toggle-text">⚙️ 高级设置（自定义接口）</span>
+        <span class="advanced-arrow" id="advancedArrow">▾</span>
+      </button>
+      <div class="advanced-content" id="advancedContent">
+        <div class="form-group" style="margin-top: 14px;">
+          <label class="form-label" for="customBaseUrl">
+            <span class="label-icon">🔗</span> 自定义 Base URL
+          </label>
+          <input type="text" id="customBaseUrl" class="form-input" placeholder="如：http://127.0.0.1:8080/v1"
+            autocomplete="off" />
+          <p class="form-hint">留空则使用官方接口。适用于 OneAPI、本地代理等转发服务。</p>
+        </div>
+        <div class="form-group" style="margin-top: 12px;">
+          <label class="form-label" for="customModel">
+            <span class="label-icon">🧩</span> 自定义模型名
+          </label>
+          <input type="text" id="customModel" class="form-input" placeholder="留空使用默认模型" autocomplete="off"
+            spellcheck="false" />
+          <p class="form-hint" id="modelHint"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 保存按钮 -->
+    <button class="btn-save" id="saveBtn" type="button">
+      <span id="saveBtnText">💾 保存设置</span>
+    </button>
+
+    <!-- 状态反馈 -->
+    <div class="status-msg" id="statusMsg"></div>
+  </main>
+
+  <!-- ── 底部安全提示 ── -->
+  <footer class="footer">
+    <span class="footer-lock">🔒</span>
+    密钥仅保存在本地浏览器，不会上传至任何服务器
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
