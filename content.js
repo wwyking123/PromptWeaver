@@ -109,10 +109,38 @@
     const btn = document.createElement('div');
     btn.id = BTN_ID;
     btn.setAttribute('title', 'Prompt Optimizer：一键优化提示词（可拖拽）');
-    btn.innerHTML = `
-      <span class="po-btn-icon">🪄</span>
-      <span class="po-btn-spinner"></span>
+
+    // ─ SVG 图标（魔法棒 + 星明），不依赖字体，消除跨站污染 ─
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('width', '18');
+    svg.setAttribute('height', '18');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'white');
+    svg.setAttribute('stroke-width', '1.8');
+    svg.setAttribute('stroke-linecap', 'round');
+    svg.setAttribute('stroke-linejoin', 'round');
+    svg.setAttribute('class', 'po-btn-icon');
+    svg.innerHTML = `
+      <!-- 魔法棒杆身 -->
+      <line x1="5" y1="19" x2="14" y2="10"/>
+      <path d="M14 10 C14 10, 15 7, 13 5" stroke-width="1.8" fill="none"/>
+      <!-- 杆头圆珠 -->
+      <circle cx="13" cy="5" r="1.2" fill="white" stroke="none"/>
+      <!-- 左上小星 -->
+      <polygon points="19,2 19.6,3.7 21.4,3.7 20,4.8 20.5,6.5 19,5.4 17.5,6.5 18,4.8 16.6,3.7 18.4,3.7"
+               fill="white" stroke="none"/>
+      <!-- 右下小出光点 -->
+      <circle cx="7" cy="8" r="0.8" fill="rgba(255,255,255,0.7)" stroke="none"/>
     `;
+
+    // ─ Loading 转圈动画 ─
+    const spinner = document.createElement('span');
+    spinner.className = 'po-btn-spinner';
+
+    btn.appendChild(svg);
+    btn.appendChild(spinner);
+
     btn.addEventListener('mouseenter', () => { isButtonHovered = true; });
     btn.addEventListener('mouseleave', () => { isButtonHovered = false; });
 
@@ -454,7 +482,13 @@
         cursor: grabbing;
         transform: none !important;
       }
-      #${BTN_ID} .po-btn-icon { font-size: 18px; line-height: 1; display: block; }
+      #${BTN_ID} .po-btn-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        flex-shrink: 0;
+      }
       #${BTN_ID} .po-btn-spinner {
         display: none;
         width: 18px; height: 18px;
@@ -464,7 +498,7 @@
         animation: po-spin 0.7s linear infinite;
       }
       #${BTN_ID}.po-loading .po-btn-icon    { display: none; }
-      #${BTN_ID}.po-loading .po-btn-spinner { display: block; }
+      #${BTN_ID}.po-loading .po-btn-spinner { display: flex; }
       @keyframes po-spin { to { transform: rotate(360deg); } }
 
       /* ── 遮罩层 ── */
