@@ -4,18 +4,48 @@
 // ============================================================
 
 // ── 元提示词（Meta-Prompt）────────────────────────────────────
-const META_PROMPT_SYSTEM = `你是一个顶尖的 Prompt 工程师。你的任务是将用户提供的简短、模糊的文字，扩写为一个结构清晰的专业提示词。
+function buildMetaPrompt(userText) {
+  return `你是一个世界顶尖的 Prompt 工程师。你的任务是将用户提供的简短、模糊的文字，扩写为结构严谨、极具执行力的高级提示词。
 
-扩写后的提示词必须包含以下四个部分（用标题标注）：
-1. 【角色设定】：定义 AI 应扮演的角色和专业背景
-2. 【背景与上下文】：任务的背景信息和前提条件
-3. 【核心任务】：明确、具体的目标和要求
-4. 【输出规范】：对输出格式、长度、风格的具体要求
+【执行步骤】
+第一步：分析意图。深入理解用户简短输入的真实目的。
+第二步：动态匹配。根据意图，从以下 4 种专业框架中选择最合适的一种进行扩写：
 
-重要约束：
-- 不改变原始意图，只扩展和完善细节
-- 直接输出优化后的提示词，不要加任何解释性前缀（如"好的，这是优化后的..."）
-- 使用简体中文`;
+1. [代码与工程框架] (适用于编程、算法、系统设计)
+   - 角色设定与技术栈：
+   - 业务背景与目标：
+   - 核心开发任务：
+   - 约束条件与边界处理：(如性能要求、异常捕获)
+   - 输出格式：(要求提供注释、思路解析等)
+
+2. [学术与逻辑推导框架] (适用于数学计算、物理推导、哲学理论探讨)
+   - 角色设定与学术领域：
+   - 核心问题与前置假设：
+   - 拆解与推导步骤要求：(强制要求 Step-by-Step)
+   - 论证深度与案例结合：
+   - 输出规范：(要求使用清晰的数学符号或严谨的学术语言)
+
+3. [文本与创意生成框架] (适用于写作、总结、翻译)
+   - 角色设定与行文基调：
+   - 目标受众与上下文：
+   - 核心创作任务：
+   - 风格、语气与特殊限制：
+   - 输出格式：
+
+4. [通用万能框架] (如果不属于以上三种)
+   - 角色设定：
+   - 背景信息：
+   - 具体任务：
+   - 输出要求：
+
+【输出严格约束】
+- 绝对不要输出你的分析过程或选择了哪个框架。
+- 绝对不要输出任何前言、后语、解释或问候。
+- 请直接输出最终扩写好的高级提示词文本。
+
+【用户输入】
+${userText}`;
+}
 
 // ── 各 Provider 默认配置 ──────────────────────────────────────
 const PROVIDER_DEFAULTS = {
@@ -107,11 +137,12 @@ async function openaiCompatAdapter(config, apiKey, customBaseUrl, userText) {
   const baseUrl = customBaseUrl.trim() || config.baseUrl;
   const endpoint = `${baseUrl.replace(/\/$/, '')}/chat/completions`;
 
+  const metaPrompt = buildMetaPrompt(userText);
+
   const body = {
     model: config.model,
     messages: [
-      { role: 'system', content: META_PROMPT_SYSTEM },
-      { role: 'user', content: `请优化以下提示词：\n\n${userText}` },
+      { role: 'user', content: metaPrompt },
     ],
     temperature: 0.7,
     max_tokens: 2048,
@@ -142,11 +173,12 @@ async function geminiAdapter(config, apiKey, customBaseUrl, userText) {
   const baseUrl = customBaseUrl.trim() || config.baseUrl;
   const endpoint = `${baseUrl.replace(/\/$/, '')}/v1beta/models/${config.model}:generateContent?key=${apiKey}`;
 
+  const metaPrompt = buildMetaPrompt(userText);
+
   const body = {
-    system_instruction: { parts: [{ text: META_PROMPT_SYSTEM }] },
     contents: [{
       role: 'user',
-      parts: [{ text: `请优化以下提示词：\n\n${userText}` }],
+      parts: [{ text: metaPrompt }],
     }],
     generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
   };
@@ -173,11 +205,12 @@ async function claudeAdapter(config, apiKey, customBaseUrl, userText) {
   const baseUrl = customBaseUrl.trim() || config.baseUrl;
   const endpoint = `${baseUrl.replace(/\/$/, '')}/v1/messages`;
 
+  const metaPrompt = buildMetaPrompt(userText);
+
   const body = {
     model: config.model,
     max_tokens: 2048,
-    system: META_PROMPT_SYSTEM,
-    messages: [{ role: 'user', content: `请优化以下提示词：\n\n${userText}` }],
+    messages: [{ role: 'user', content: metaPrompt }],
   };
 
   const response = await fetch(endpoint, {

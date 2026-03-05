@@ -1,6 +1,6 @@
 # 🪄 Prompt Optimizer
 
-> 一键将简短输入扩写为结构化专业提示词的 Chrome 浏览器插件。
+> 一个轻量级的 Chrome 插件，利用大模型（如 OpenAI、Gemini、Claude、DeepSeek 等）将你简短、模糊的输入一键扩写为结构化的专业提示词。支持 BYOK（自带密钥），无后端，纯本地运行，保护隐私。 A lightweight Chrome extension that uses LLMs (OpenAI, Gemini, Claude, DeepSeek) to instantly expand your short, vague inputs into highly structured, professional prompts. BYOK supported, backend-free, and privacy-focused.
 
 ![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?logo=googlechrome&logoColor=white)
 ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blueviolet)
@@ -10,7 +10,9 @@
 
 ## ✨ 功能简介
 
-在使用 ChatGPT、Claude、Gemini 等网页版 AI 时，只需在输入框中写下简短的想法，点击右下角的 🪄 魔法棒按钮，插件会自动将其扩写为包含**角色设定、背景上下文、核心任务、输出规范**的结构化专业提示词。
+在使用 ChatGPT、Claude、Gemini 等网页版 AI 时，只需在输入框中写下简短的想法，点击右下角的 🪄 魔法棒按钮，插件会**自动识别意图**，从 4 种专业框架（代码工程 / 学术推导 / 文本创意 / 通用万能）中动态匹配最合适的一种，扩写为结构严谨、极具执行力的高级提示词。
+
+🖱️ **魔法棒按钮支持自由拖拽**，遮挡输入框时随手拖到其他位置即可。
 
 **生成结果不会直接替换原文**，而是弹出预览面板，你可以：
 - ✅ **接受并使用** — 将结果（可手动编辑）填入输入框
@@ -85,8 +87,9 @@ Base URL：https://open.bigmodel.cn/api/paas/v4
 ```
 Prompt Optimizer/
 ├── manifest.json        # 插件配置 (Manifest V3)
-├── background.js        # Service Worker：多模型 API 适配器
-├── content.js           # Content Script：魔法棒按钮 & 预览浮层
+├── background.js        # Service Worker：动态意图识别 + 多模型 API 适配器
+├── content.js           # Content Script：可拖拽魔法棒按钮 & 预览浮层
+├── CHANGELOG.md         # 更新日志
 ├── popup/
 │   ├── popup.html       # 设置面板
 │   ├── popup.css        # 深色主题样式
@@ -112,6 +115,12 @@ Prompt Optimizer/
 - **原生 HTML / CSS / JavaScript (ES6+)**，无任何框架和构建工具
 - **Chrome Extension Manifest V3**
 - API 适配器支持 OpenAI Chat Completions 格式、Google Gemini API、Anthropic Messages API
+
+---
+
+## 📋 更新日志
+
+详见 [CHANGELOG.md](./CHANGELOG.md)
 
 ---
 
